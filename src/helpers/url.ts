@@ -1,4 +1,4 @@
-import { isDate, isObject } from './util';
+import { isDate, isPlainObject } from './util';
 
 function encode(val: string): string {
     return encodeURIComponent(val)
@@ -11,6 +11,18 @@ function encode(val: string): string {
         .replace(/%5D/ig, ']')
 };
 
+
+/**
+ * function 处理get请求时  请求参数拼接到url上
+ * 处理逻辑为：
+ * 1. 参数为 数组            => arr[]=a1&arr[]=a2
+ * 2. 参数为 Date类型        => Date.toISOString()
+ * 3. 参数为 Object          => Object 先 stringify 再 encode 编码
+ * 4. 参数为 特殊字符         => 支持特殊字符，并且空格变成 + 号
+ * 5. 参数为 null            => 不拼接
+ * 6. 参数带 哈希 #          => 忽略哈希值
+ * 7. 已经带有参数的          => 保留参数并且在后面继续拼接
+ */
 export function buildURL(url: string, params?: any): string {
     if (!params) {
         return url;
@@ -37,7 +49,7 @@ export function buildURL(url: string, params?: any): string {
         values.forEach(val => {
             if (isDate(val)) {
                 val = val.toISOString();
-            } else if (isObject(val)) {
+            } else if (isPlainObject(val)) {
                 val = JSON.stringify(val);
             };
 
