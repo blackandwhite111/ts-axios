@@ -27,6 +27,7 @@ export interface AxiosRequestConfig {
   params?: any
   headers?: any
   responseType?: XMLHttpRequestResponseType
+  timeout?: number
 }
 
 // 定义返回响应数据的类型
@@ -41,3 +42,13 @@ export interface AxiosResponse {
 
 // 定义一个Promise返回类型，指定泛型AxiosResponse
 export interface AxiosPromise extends Promise<AxiosResponse> {}
+
+// 定义一个错误类型 继承 Error
+export interface AxiosError extends Error {
+  isAxiosError: boolean
+  message: string
+  config: AxiosRequestConfig
+  code?: string | null
+  request?: any
+  response?: AxiosResponse
+}
