@@ -83,7 +83,7 @@ export interface AxiosInstance extends Axios {
 export interface AxiosInterceptorManager<T> {
   use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number
 
-  eject(res: any): void
+  eject(id: number): void
 }
 
 export interface ResolvedFn<T> {
