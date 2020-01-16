@@ -56,7 +56,7 @@ interface User {
 }
 
 function getUse<T>() {
-  return axios<ResponseData<T>>('/extend/user', {
+  return axios<ResponseData<T>>('/extend/user1', {
     method: 'post',
     data: {
       message: '123321'
@@ -68,6 +68,7 @@ function getUse<T>() {
 
 async function test() {
   const user = await getUse<User>()
+  console.log(user)
   if (user) {
     console.log(user.result.name)
   }
