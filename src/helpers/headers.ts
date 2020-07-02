@@ -1,5 +1,6 @@
-import { isPlainObject } from './util'
+import { deepMerge, isPlainObject } from './util'
 import validate = WebAssembly.validate
+import { Method } from '../types'
 
 // 例如 'Content-Type', 不一定都是传入首字母大写，写个格式化方法统一
 function normalizeHeaderName(headers: any, normalizeName: string): void {
@@ -44,4 +45,20 @@ export function parseHeaders(headers: string): any {
     parsed[key] = val
   })
   return parsed
+}
+
+export function flattenHeaders(headers: any, method: Method): any {
+  if(!headers) {
+    return headers
+  }
+
+  headers = deepMerge(headers.common, headers[method], headers)
+
+  const methodsToDelete = ['delete', 'get', 'head', 'options', 'post', 'put', 'patch', 'common']
+
+  methodsToDelete.forEach(method => {
+    delete headers[method]
+  })
+
+  return headers
 }
