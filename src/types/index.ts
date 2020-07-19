@@ -30,6 +30,16 @@ export interface AxiosRequestConfig {
   timeout?: number
   transformRequest?: AxiosTransformer | AxiosTransformer[]
   transformResponse?: AxiosTransformer | AxiosTransformer[]
+  cancelToken?: CancelToken
+  withCredentials?: boolean
+  xsrfCookieName?: string
+  xsrfHeaderName?: string
+  onDownloadProgress?: (e: ProgressEvent) => void
+  onUploadProgress?: (e: ProgressEvent) => void
+  auth?: AxiosBasicCredentials
+  validateStatus?: (status: number) => boolean
+  paramsSerializer?: (params: any) => string
+  baseURL?: string
 
   [propName: string]: any
 }
@@ -77,6 +87,8 @@ export interface Axios {
   put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
 
   patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
+
+  getUri(config?: AxiosRequestConfig): string
 }
 
 export interface AxiosInstance extends Axios {
@@ -85,8 +97,22 @@ export interface AxiosInstance extends Axios {
   <T = any>(url: string, config: AxiosRequestConfig): AxiosPromise<T>
 }
 
+export interface AxiosClassStatic {
+  new (config: AxiosRequestConfig): Axios
+}
+
 export interface AxiosStatic extends AxiosInstance {
   create(config?: AxiosRequestConfig): AxiosInstance
+
+  CancelToken: CancelTokenStatic
+  Cancel: CancelStatic
+  isCancel: (value: any) => boolean
+
+  all<T>(promises: Array<T | Promise<T>>): Promise<T[]>
+
+  spread<T, R>(callback: (...args: T[]) => R): (arr: T[]) => R
+
+  Axios: AxiosClassStatic
 }
 
 export interface AxiosInterceptorManager<T> {
@@ -105,4 +131,43 @@ export interface RejectedFn {
 
 export interface AxiosTransformer {
   (data: any, headers?: any): any
+}
+
+export interface CancelToken {
+  promise: Promise<Cancel>
+  reason?: Cancel
+
+  throwIfRequested(): void
+}
+
+export interface Canceler {
+  (message?: string): void
+}
+
+export interface CancelExecutor {
+  (cancel: Canceler): void
+}
+
+export interface CancelTokenSource {
+  token: CancelToken
+  cancel: Canceler
+}
+
+export interface CancelTokenStatic {
+  new (executor: CancelExecutor): CancelToken
+
+  source(): CancelTokenSource
+}
+
+export interface Cancel {
+  message?: string
+}
+
+export interface CancelStatic {
+  new (message?: string): Cancel
+}
+
+export interface AxiosBasicCredentials {
+  username: string
+  password: string
 }

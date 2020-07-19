@@ -4,6 +4,8 @@ const extend = require('./extend')
 const simple = require('./simple')
 const interceptor = require('./interceptor')
 const config = require('./config')
+const cancel = require('./cancel')
+const more = require('./more')
 
 module.exports = function api (router) {
     base(router)
@@ -12,4 +14,6 @@ module.exports = function api (router) {
     simple(router)
     interceptor(router)
     config(router)
+    cancel(router)
+    more(router)
 }
