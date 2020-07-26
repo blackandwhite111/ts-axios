@@ -10,8 +10,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     const {
       data = null,
       url,
-      method = 'get',
-      headers,
+      method,
+      headers = {},
       responseType,
       timeout,
       cancelToken,
@@ -28,7 +28,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     const request = new XMLHttpRequest()
 
     // 初始化
-    request.open(method.toLocaleUpperCase(), url!, true)
+    request.open(method!.toLocaleUpperCase(), url!, true)
 
     // 配置request对象
     configureRequest()
@@ -67,7 +67,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
 
         // 获取响应头，并且处理一下headers 把字符串转成对象
         const responseHeaders = parseHeaders(request.getAllResponseHeaders())
-        const responseData = responseType !== 'text' ? request.response : request.responseText
+        const responseData =
+          responseType && responseType !== 'text' ? request.response : request.responseText
         const response: AxiosResponse = {
           data: responseData,
           status: request.status,
